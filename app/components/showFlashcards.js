@@ -11,7 +11,7 @@ const ShowFlashcards = ({flashcards}) => {
             [id]: !prev[id]
         }))
     }
-
+    
     return (
         flashcards.length > 0 && (
             <Grid container spacing={3}>

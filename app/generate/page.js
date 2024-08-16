@@ -2,10 +2,10 @@
 
 import { firestore } from "@/firebase/config"
 import { useUser } from "@clerk/nextjs"
-import { Container, Box, Typography, TextField, Paper, Button, Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions } from "@mui/material"
+import { Container, Box, Typography, TextField, Paper, Button, Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions, CircularProgress } from "@mui/material"
 import { collection, doc, getDoc, writeBatch } from "firebase/firestore"
 import { useRouter } from "next/navigation"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import ShowFlashcards from '@/app/components/showFlashcards'
 
 export default function Generate() {
@@ -15,8 +15,17 @@ export default function Generate() {
     const [name, setName] = useState('')
     const [open, setOpen] = useState(false)
     const router = useRouter()
+    const [generating, setGenerating] = useState(false)
+
+    useEffect(() => {
+        if (flashcards.length > 0) {
+            setGenerating(false)
+        }
+    }, [flashcards])
 
     const handleSubmit = async() => {
+        setFlashcards([])
+        setGenerating(true)
         fetch('api/generate', {
             method: 'POST',
             body: text,
@@ -88,6 +97,7 @@ export default function Generate() {
                         Submit
                     </Button>
                 </Paper>
+                {generating && <CircularProgress/>}
             </Box>
 
             {
