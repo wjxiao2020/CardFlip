@@ -2,7 +2,8 @@
 
 import { useEffect, useState } from "react"
 import { useSearchParams } from "next/navigation"
-import { CircularProgress, Container, Typography, Box } from "@mui/material"
+import { Container, Typography, Box } from "@mui/material"
+import Loading from "../components/loading"
 
 
 const ResultPage = () => {
@@ -39,10 +40,7 @@ const ResultPage = () => {
 
     if (loading) {
         return (
-            <Container maxWidth='100vw' sx={{textAlign: 'center', mt: 4}}>
-                <CircularProgress/>
-                <Typography variant="h6">Loading...</Typography>
-            </Container>
+            <Loading />
         )
     }
 

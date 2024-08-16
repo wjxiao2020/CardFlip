@@ -4,32 +4,46 @@ import getStripe from "@/utils/get-stripe";
 import { SignedIn, SignedOut, UserButton } from "@clerk/nextjs";
 import { AppBar, Container, Toolbar, Typography, Button, Box, Grid } from "@mui/material";
 import Head from 'next/head';
+import { useUser } from "@clerk/nextjs"
+import { useRouter } from 'next/navigation'
 
 export default function Home() {
+  const {isLoaded, isSignedIn, user} = useUser()
+  const router = useRouter()
 
   const handleSubmit = async() => {
-    const checkoutSession = await fetch('/api/checkout_sessions', {
+
+    if (!isLoaded) {
+      return <Loading />
+    } 
+    
+    if (!isSignedIn) {
+      router.push('/sign-in')
+    } 
+    else {
+      const checkoutSession = await fetch('/api/checkout_sessions', {
       method: 'POST',
       headers: {
         // TODO: change once deployed
         origin: 'http://localhost:3000'
       }
-    })
+      })
 
-    const checkoutSessionJSON = await checkoutSession.json()
+      const checkoutSessionJSON = await checkoutSession.json()
 
-    if (checkoutSession.status === 500) {
-      console.error(checkoutSession.statusText)
-      return
-    }
+      if (checkoutSession.status === 500) {
+        console.error(checkoutSession.statusText)
+        return
+      }
 
-    const stripe = await getStripe()
-    const {error} = await stripe.redirectToCheckout({
-      sessionId: checkoutSessionJSON.id
-    })
+      const stripe = await getStripe()
+      const {error} = await stripe.redirectToCheckout({
+        sessionId: checkoutSessionJSON.id
+      })
 
-    if (error) {
-      console.warn(error.message)
+      if (error) {
+        console.warn(error.message)
+      }
     }
   }
 

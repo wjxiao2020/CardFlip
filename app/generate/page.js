@@ -7,6 +7,7 @@ import { collection, doc, getDoc, writeBatch } from "firebase/firestore"
 import { useRouter } from "next/navigation"
 import { useEffect, useState } from "react"
 import ShowFlashcards from '@/app/components/showFlashcards'
+import Loading from '@/app/components/loading'
 
 export default function Generate() {
     const {isLoaded, isSignedIn, user} = useUser()
@@ -22,6 +23,14 @@ export default function Generate() {
             setGenerating(false)
         }
     }, [flashcards])
+
+    if (!isLoaded) {
+        return <Loading />
+    } 
+    
+    if (!isSignedIn) {
+        router.push('/sign-in')
+    }
 
     const handleSubmit = async() => {
         setFlashcards([])
