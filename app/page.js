@@ -80,6 +80,7 @@ const pricingOptions = [
   {
     title: 'Basic',
     price: '$5 / Month',
+    cost: 5,
     description: 'Access to basic flashcard features and limited storage.',
     buttonLabel: 'Choose Basic',
     buttonColor: '#FFA726',
@@ -88,6 +89,7 @@ const pricingOptions = [
   {
     title: 'Pro',
     price: '$10 / Month',
+    cost: 10,
     description: 'Unlimited flashcards and storage, with priority support.',
     buttonLabel: 'Choose Pro',
     buttonColor: '#FF6B5A',
@@ -105,7 +107,7 @@ export default function Home() {
     setMounted(true);
   }, []);
 
-  const handleSubmit = async () => {
+  const handleSubmit = async (cost) => {
     setLoading(true);
 
     if (!isLoaded) {
@@ -119,6 +121,7 @@ export default function Home() {
         method: 'POST',
         headers: {
           origin: 'http://localhost:3000',
+          amount: cost,
         },
       });
 
@@ -137,8 +140,9 @@ export default function Home() {
 
       if (error) {
         console.warn(error.message);
-        setLoading(false);
       }
+
+      setLoading(false);
     }
   };
 
@@ -419,7 +423,7 @@ export default function Home() {
                         transform: 'scale(1.05)',
                       },
                     }}
-                    onClick={handleSubmit}
+                    onClick={() => handleSubmit(option.cost)}
                   >
                     {option.buttonLabel}
                   </Button>

@@ -4,6 +4,7 @@ import { useEffect, useState } from "react"
 import { useSearchParams } from "next/navigation"
 import { Container, Typography, Box } from "@mui/material"
 import Loading from "../components/loading"
+import Link from 'next/link';
 
 
 const ResultPage = () => {
@@ -52,11 +53,15 @@ const ResultPage = () => {
         )
     }
     return (
+        <Box sx={{m: 5}}>
+            <Link href='/' passhref style={{textDecoration: "none", color: 'black'}}>
+                <Typography variant="body1"> &lt; Back</Typography>
+            </Link>
         <Container maxWidth='100vw' sx={{textAlign: 'center', mt: 4}}>
             {session.payment_status === 'paid' 
                 ? (
                     <Box>
-                       <Typography variant="h6">Thank you for purchasing!</Typography>
+                       <Typography variant="h4">Thank you for purchasing!</Typography>
                         <Box sx={{mt: 22}}>
                             <Typography variant="body1">
                                 We have received your payment. You will receive an email with the order detail shortly.
@@ -66,7 +71,7 @@ const ResultPage = () => {
                 ) 
                 : (
                     <Box>
-                        <Typography variant="h6">Payment Failed</Typography>
+                        <Typography variant="h4">Payment Failed</Typography>
                         <Box sx={{mt: 22}}>
                             <Typography variant="body1">
                                 Your payment was not successful. Please try again.
@@ -76,6 +81,7 @@ const ResultPage = () => {
                 )
             }
         </Container>
+        </Box>
     )
 }
 
