@@ -109,22 +109,15 @@ export default function Generate() {
                 fontFamily: `'Roboto', sans-serif`,
                 flexDirection: 'column'
             }}>
-                <Box sx={{mt: 5, ml: 5}}>
+                <Box sx={{m: 5, display:'flex', flexDirection:'row', alignItems:'center', justifyContent: 'space-between'}}>
                     <Link href='/' passhref>
                         <NavigateBeforeIcon fontSize="large" sx={{color: darkMode ? '#ffcc00' : '#2c5364'}}/>
                     </Link>
-                   
+                    <Link href='/flashcards' passhref style={{textDecoration: "none"}}>
+                        <Typography variant="body1" sx={{ fontFamily: `'Poppins', sans-serif`, mt: 2, color: darkMode ? '#ffcc00' : '#2c5364' }}>View Saved Flashcards &gt;</Typography>
+                    </Link>
                 </Box>
-                    
-                <Box
-                    style={{
-                        width: '100vw',
-                        display: 'flex',
-                        justifyContent: 'center',
-                        alignItems: 'center',
-                        flexDirection: 'column'
-                    }}
-                >
+                
                 <Container maxWidth='md'>
                     <Box sx={{
                         mt: 4,
@@ -193,7 +186,7 @@ export default function Generate() {
                                     '& .MuiInputLabel-root': {
                                         color: darkMode ? 'rgba(255, 255, 255, 0.7)' : 'rgba(0, 0, 0, 0.7)',
                                         "&.Mui-focused": {
-                                            borderColor: '#000'
+                                            color: darkMode ? 'rgba(255, 255, 255, 0.7)' : 'rgba(0, 0, 0, 0.7)',
                                         }
                                     },
                                 }}
@@ -274,7 +267,6 @@ export default function Generate() {
                         </DialogActions>
                     </Dialog>
                 </Container>
-                </Box>
             </Box>
         </ThemeProvider>
     )
