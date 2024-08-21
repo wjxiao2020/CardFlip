@@ -13,6 +13,8 @@ import CssBaseline from '@mui/material/CssBaseline';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import LightModeIcon from '@mui/icons-material/LightMode';
 import DarkModeIcon from '@mui/icons-material/DarkMode';
+import NavigateBeforeIcon from '@mui/icons-material/NavigateBefore';
+import Link from 'next/link';
 
 export default function Generate() {
     const { isLoaded, isSignedIn, user } = useUser()
@@ -100,14 +102,29 @@ export default function Generate() {
     return (
         <ThemeProvider theme={theme}>
             <CssBaseline />
-            <div style={{
+            <Box style={{
                 minHeight: '100vh',
                 display: 'flex',
-                justifyContent: 'center',
-                alignItems: 'center',
                 background: darkMode ? 'linear-gradient(to right, #0f2027, #203a43, #2c5364)' : 'linear-gradient(to right, #ffecd2, #fcb69f)',
-                fontFamily: `'Roboto', sans-serif`
+                fontFamily: `'Roboto', sans-serif`,
+                flexDirection: 'column'
             }}>
+                <Box sx={{mt: 5, ml: 5}}>
+                    <Link href='/' passhref>
+                        <NavigateBeforeIcon fontSize="large" sx={{color: darkMode ? '#ffcc00' : '#2c5364'}}/>
+                    </Link>
+                   
+                </Box>
+                    
+                <Box
+                    style={{
+                        width: '100vw',
+                        display: 'flex',
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        flexDirection: 'column'
+                    }}
+                >
                 <Container maxWidth='md'>
                     <Box sx={{
                         mt: 4,
@@ -152,7 +169,7 @@ export default function Generate() {
                             <TextField
                                 value={text}
                                 onChange={(e) => setText(e.target.value)}
-                                label='Enter text'
+                                label='Enter the topic for the flashcards'
                                 fullWidth
                                 multiline
                                 rows={4}
@@ -175,6 +192,9 @@ export default function Generate() {
                                     },
                                     '& .MuiInputLabel-root': {
                                         color: darkMode ? 'rgba(255, 255, 255, 0.7)' : 'rgba(0, 0, 0, 0.7)',
+                                        "&.Mui-focused": {
+                                            borderColor: '#000'
+                                        }
                                     },
                                 }}
                             />
@@ -254,7 +274,8 @@ export default function Generate() {
                         </DialogActions>
                     </Dialog>
                 </Container>
-            </div>
+                </Box>
+            </Box>
         </ThemeProvider>
     )
 }

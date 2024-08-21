@@ -46,7 +46,7 @@ export default function Flashcard() {
     }
 
     return (
-        <Container maxWidth='100vw'>
+        <Container maxWidth='md'>
             <Grid container spacing={3} sx={{mt: 4}}>
                 <ShowFlashcards flashcards={flashcards}/>
             </Grid>

@@ -6,6 +6,7 @@ import { collection, doc, getDoc, setDoc } from 'firebase/firestore'
 import { firestore } from '@/firebase/config'
 import { useRouter } from 'next/navigation'
 import { Card, CardActionArea, CardContent, Container, Grid, Typography } from '@mui/material'
+import Loading from '@/app/components/loading'
 
 export default function Flashcards() {
     const {isLoaded, isSignedIn, user} = useUser()
@@ -31,7 +32,7 @@ export default function Flashcards() {
     }, [user])
 
     if (!isLoaded) {
-        return <div>Please wait...</div>
+        return <Loading />
     } else if (!isSignedIn) {
         router.push('/sign-in')
     }

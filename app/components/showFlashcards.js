@@ -17,19 +17,20 @@ const ShowFlashcards = ({flashcards}) => {
             <Grid container spacing={3}>
                 {
                     flashcards.map((flashcard, index) => (
-                        <Grid item xs={12} sm={6} md={4} key={index}>
+                        <Grid item xs={12} key={index}>
                             <Card>
                                 <CardActionArea onClick={() => {handleCardClick(index)}}>
                                     <CardContent>
                                         <Box 
                                         sx={{
-                                            perspective: '1000px',
+                                            perspective: '2000px',
                                             '& > div': {
                                                 transition: 'transform 0.6s',
                                                 transformStyle: 'preserve-3d',
                                                 position: 'relative',
                                                 width: '100%',
-                                                height: '200px',
+                                                // height: '200px',
+                                                minHeight: '200px',
                                                 boxShadow: '0 4px 8px 0 rgba(0, 0, 0, 0.2)',
                                                 transform: flipped[index] ? 'rotateY(180deg)' : 'rotateY(0deg)'
                                             },
