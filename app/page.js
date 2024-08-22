@@ -12,7 +12,9 @@ import Stack from '@mui/material/Stack';
 import AutoFixHighRoundedIcon from '@mui/icons-material/AutoFixHighRounded';
 import SettingsSuggestRoundedIcon from '@mui/icons-material/SettingsSuggestRounded';
 import QueryStatsRoundedIcon from '@mui/icons-material/QueryStatsRounded';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, use } from 'react';
+import { doc, getDoc } from 'firebase/firestore';
+import { firestore} from '../firebase/config';
 
 const gradientAnimation = `
   @keyframes gradientAnimation {
@@ -98,10 +100,24 @@ const pricingOptions = [
 ];
 
 export default function Home() {
-  const { isLoaded, isSignedIn } = useUser();
+  const { isLoaded, isSignedIn, user } = useUser();
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [mounted, setMounted] = useState(false);
+  const [showPricing, setShowPricing] = useState(false);
+
+  useEffect(() => {
+    const fetchSubscription = async () => {
+      if (user) {
+        const userDocRef = doc(firestore, 'users', user.id);
+        const docSnap = await getDoc(userDocRef);
+        if (docSnap.exists() && !docSnap.data().subscriptionType) {
+          setShowPricing(true);
+        }
+      }
+    };
+    fetchSubscription();
+  }, [user]);
 
   useEffect(() => {
     setMounted(true);
@@ -117,12 +133,15 @@ export default function Home() {
     if (!isSignedIn) {
       router.push('/sign-in');
     } else {
+      const userEmail = user.primaryEmailAddress.emailAddress;
+      const planType = cost === 5 ? 'basic' : 'pro';
       const checkoutSession = await fetch('/api/checkout_sessions', {
         method: 'POST',
         headers: {
           origin: 'http://localhost:3000',
           amount: cost,
         },
+        body: JSON.stringify({ plan: planType, email: userEmail, userId: user.id }),
       });
 
       const checkoutSessionJSON = await checkoutSession.json();
@@ -328,7 +347,7 @@ export default function Home() {
       </Box>
 
       <Divider sx={{ my: 10, borderColor: 'rgba(255, 255, 255, 0.3)' }} />
-
+      {showPricing && (
       <Box
         id="pricing-section"
         sx={{
@@ -433,6 +452,7 @@ export default function Home() {
           </Grid>
         </Container>
       </Box>
+      )}
 
       <Box
         sx={{
