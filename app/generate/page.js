@@ -3,7 +3,7 @@
 import { firestore } from "@/firebase/config"
 import { useUser } from "@clerk/nextjs"
 import { Container, Box, Typography, TextField, Paper, Button, Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions, CircularProgress, IconButton } from "@mui/material"
-import { collection, doc, getDoc, writeBatch } from "firebase/firestore"
+import { collection, doc, getDoc,setDoc, writeBatch } from "firebase/firestore"
 import { useRouter } from "next/navigation"
 import { useEffect, useState } from "react"
 import ShowFlashcards from '@/app/components/showFlashcards'
@@ -52,6 +52,26 @@ export default function Generate() {
     }
 
     const handleSubmit = async () => {
+        const userDocRef = doc(collection(firestore, 'users'), user.id);
+        const docSnap = await getDoc(userDocRef);
+        let generateCount = 0;
+        let subscriptionType = null;
+
+        if (docSnap.exists()) {
+            subscriptionType = docSnap.data().subscriptionType || null;
+            generateCount = docSnap.data().generateCount || 0;
+        }
+        console.log(subscriptionType, generateCount);
+        if (!subscriptionType && generateCount >= 5) {
+            alert('You have reached the limit of 5 flashcard generations. Please subscribe to generate more.');
+            return;
+        } else if (subscriptionType === 'basic' && generateCount >= 100) {
+            alert('You have reached the limit of 100 flashcard generations for your Basic plan.');
+            return;
+        }
+
+        await setDoc(userDocRef, { generateCount: generateCount + 1 }, { merge: true });
+
         setFlashcards([])
         setGenerating(true)
         fetch('api/generate', {
@@ -66,13 +86,21 @@ export default function Generate() {
     const handleClose = () => { setOpen(false) }
 
     const saveFlashcards = async () => {
+        const userDocRef = doc(collection(firestore, 'users'), user.id);
+        const docSnap = await getDoc(userDocRef);
+        let subscriptionType = null;
+        if (docSnap.exists()) {
+            subscriptionType = docSnap.data().subscriptionType || null;
+        }
+        if (!subscriptionType) {
+            alert('Please subscribe to save flashcards');
+            return;
+        }
         if (!name) {
             alert('Please enter a name')
             return
         }
         const batch = writeBatch(firestore)
-        const userDocRef = doc(collection(firestore, 'users'), user.id)
-        const docSnap = await getDoc(userDocRef)
 
         if (docSnap.exists()) {
             const collections = docSnap.data().flashcards || []
